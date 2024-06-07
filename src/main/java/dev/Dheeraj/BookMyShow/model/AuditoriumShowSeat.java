@@ -1,4 +1,16 @@
 package dev.Dheeraj.BookMyShow.model;
 
-public class AuditoriumShowSeat {
+import dev.Dheeraj.BookMyShow.model.constant.ShowSeatStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToOne;
+
+public class AuditoriumShowSeat extends BaseModel{
+    private double price;
+    @ManyToOne
+    private AuditoriumShow auditoriumShow;
+    @ManyToOne
+    private AuditoriumSeat auditoriumSeat;
+    @Enumerated(EnumType.STRING)
+    private ShowSeatStatus showSeatStatus;
 }
