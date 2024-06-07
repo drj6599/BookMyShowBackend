@@ -2,6 +2,7 @@ package dev.Dheeraj.BookMyShow.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +19,6 @@ public class AuditoriumShow extends BaseModel{
     private Movie movie;
     @ManyToOne
     private Auditorium auditorium;
+    @OneToMany
     private List<AuditoriumShowSeat> auditoriumShowSeats;
 }
