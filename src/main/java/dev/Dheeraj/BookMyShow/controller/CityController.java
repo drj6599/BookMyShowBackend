@@ -1,6 +1,7 @@
 package dev.Dheeraj.BookMyShow.controller;
 
 import dev.Dheeraj.BookMyShow.dto.CityRequestDto;
+import dev.Dheeraj.BookMyShow.dto.CityResponseDto;
 import dev.Dheeraj.BookMyShow.exception.InvalidCityNameException;
 import dev.Dheeraj.BookMyShow.model.City;
 import dev.Dheeraj.BookMyShow.service.CityService;
@@ -14,14 +15,15 @@ public class CityController {
     private CityService cityService;
 
     @PostMapping("/addCity")
-    public ResponseEntity createCity(@RequestBody CityRequestDto cityRequestDto){
+    @ResponseBody
+    public CityResponseDto createCity(@RequestBody CityRequestDto cityRequestDto){
         try{
             String cityName = cityRequestDto.getName();
             if(cityName.isEmpty() || cityName.isBlank() || cityName.length() == 0 || cityName == null){
                 throw new InvalidCityNameException("City Name is Invalid.");
             }
             City savedCity = cityService.saveCity(cityName);
-            return ResponseEntity.ok(savedCity);
+            return new CityResponseDto(savedCity.getId(),savedCity.getName());
         }catch(Exception e){
             e.printStackTrace();
         }
