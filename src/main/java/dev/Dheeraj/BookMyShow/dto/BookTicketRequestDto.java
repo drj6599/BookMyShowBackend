@@ -9,5 +9,6 @@ import java.util.List;
 @Setter
 public class BookTicketRequestDto {
     private List<Integer> auditoriumShowSeatIds;
-    private Integer userId;
+    private int userId;
+    private int showId;
 }

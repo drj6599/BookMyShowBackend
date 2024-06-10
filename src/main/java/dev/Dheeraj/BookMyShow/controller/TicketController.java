@@ -19,9 +19,15 @@ public class TicketController {
 
     @PostMapping("/ticket")
     public ResponseEntity bookTicket(@RequestBody BookTicketRequestDto bookTicketRequestDto){
-        if(bookTicketRequestDto.getAuditoriumShowSeatIds().size() == 0 || bookTicketRequestDto.getUserId() == null){
+        if(bookTicketRequestDto.getAuditoriumShowSeatIds().size() == 0){
             throw new NoSeatsOrUserSelectedException("No seats selected / user Id is not present");
         }
-        return ResponseEntity.ok(ticketService.bookTicket(bookTicketRequestDto.getAuditoriumShowSeatIds(), bookTicketRequestDto.getUserId()));
+        return ResponseEntity.ok(
+                ticketService.bookTicket(
+                        bookTicketRequestDto.getAuditoriumShowSeatIds(),
+                        bookTicketRequestDto.getUserId(),
+                        bookTicketRequestDto.getShowId()
+                )
+        );
     }
 }

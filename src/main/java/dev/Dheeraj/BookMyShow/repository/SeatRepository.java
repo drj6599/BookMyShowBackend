@@ -1,9 +1,9 @@
 package dev.Dheeraj.BookMyShow.repository;
 
-import dev.Dheeraj.BookMyShow.model.AuditoriumShowSeat;
+import dev.Dheeraj.BookMyShow.model.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AuditoriumShowSeatRepository extends JpaRepository<AuditoriumShowSeat,Integer> {
+public interface SeatRepository extends JpaRepository<Seat,Integer> {
 }

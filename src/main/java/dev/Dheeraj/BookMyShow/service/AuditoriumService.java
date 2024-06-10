@@ -5,7 +5,6 @@ import dev.Dheeraj.BookMyShow.model.Theatre;
 import dev.Dheeraj.BookMyShow.model.constant.AuditoriumFeatures;
 import dev.Dheeraj.BookMyShow.repository.AuditoriumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class AuditoriumService {
             features.add(AuditoriumFeatures.valueOf(f));
         }
         auditorium.setAuditoriumFeatures(features);
-        auditorium.setShows(new ArrayList<>());
+        auditorium.setAuditoriumShows(new ArrayList<>());
         auditorium.setSeats(new ArrayList<>());
         Theatre theatre = theatreService.getTheatreById(theatreId);
         List<Auditorium> audis = theatre.getAuditoriums();
@@ -37,5 +36,13 @@ public class AuditoriumService {
         auditoriumRepository.save(auditorium);
         theatreService.saveTheatre(theatre); // upsert operation :- insert + update
         return auditorium;
+    }
+
+    public Auditorium getById(int id){
+        return auditoriumRepository.findById(id).get();
+    }
+
+    public void update(Auditorium audi){
+        auditoriumRepository.save(audi);
     }
 }

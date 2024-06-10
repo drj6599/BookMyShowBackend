@@ -2,7 +2,8 @@ package dev.Dheeraj.BookMyShow.service;
 
 import dev.Dheeraj.BookMyShow.exception.PaymentFailedException;
 import dev.Dheeraj.BookMyShow.exception.SeatNotAvailableException;
-import dev.Dheeraj.BookMyShow.model.AuditoriumShowSeat;
+import dev.Dheeraj.BookMyShow.model.Auditorium;
+import dev.Dheeraj.BookMyShow.model.ShowSeat;
 import dev.Dheeraj.BookMyShow.model.Ticket;
 import dev.Dheeraj.BookMyShow.model.constant.ShowSeatStatus;
 import dev.Dheeraj.BookMyShow.model.constant.TicketStatus;
@@ -21,23 +22,25 @@ public class TicketService {
     @Autowired
     private TicketRepository ticketRepository;
     @Autowired
-    private AuditoriumShowSeatService auditoriumShowSeatService;
+    private ShowSeatService showSeatService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private AuditoriumShowService auditoriumShowService;
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-     public Ticket bookTicket(List<Integer> auditoriumShowSeatIds , int userId){
+     public Ticket bookTicket(List<Integer> auditoriumShowSeatIds , int userId , int showId){
         for (int id : auditoriumShowSeatIds){
-            AuditoriumShowSeat seat = auditoriumShowSeatService.getShowSeat(id);
+            ShowSeat seat = showSeatService.getShowSeat(id);
             if(!seat.getShowSeatStatus().equals(ShowSeatStatus.AVAILABLE)){
                 throw new SeatNotAvailableException("Seat is not available");
             }
         }
 
          for (int id : auditoriumShowSeatIds){
-             AuditoriumShowSeat seat = auditoriumShowSeatService.getShowSeat(id);
+             ShowSeat seat = showSeatService.getShowSeat(id);
              seat.setShowSeatStatus(ShowSeatStatus.LOCKED);
-             auditoriumShowSeatService.saveShowSeat(seat);
+             showSeatService.saveShowSeat(seat);
          }
          boolean paymentStatus = startPayment(auditoriumShowSeatIds);
          if(paymentStatus){
@@ -45,20 +48,20 @@ public class TicketService {
              ticket.setTimeOfBooking(LocalDateTime.now());
              double amount = 0;
              for (int i = 0; i < auditoriumShowSeatIds.size(); i++) {
-                 AuditoriumShowSeat seat = auditoriumShowSeatService.getShowSeat(auditoriumShowSeatIds.get(i));
+                 ShowSeat seat = showSeatService.getShowSeat(auditoriumShowSeatIds.get(i));
                  amount += seat.getPrice();
              }
              amount *= 1.18;          //adding 18% Gst
              ticket.setTotalAmount(amount);
-             List<AuditoriumShowSeat> bookedSeats = new ArrayList<>();
+             List<ShowSeat> bookedSeats = new ArrayList<>();
              for (int id : auditoriumShowSeatIds){
-                 AuditoriumShowSeat seat = auditoriumShowSeatService.getShowSeat(id);
+                 ShowSeat seat = showSeatService.getShowSeat(id);
                  seat.setShowSeatStatus(ShowSeatStatus.BOOKED);
                  bookedSeats.add(seat);
-                 auditoriumShowSeatService.saveShowSeat(seat);
+                 showSeatService.saveShowSeat(seat);
              }
-             ticket.setAuditoriumShowSeats(bookedSeats);
-             ticket.setAuditoriumShow(bookedSeats.get(0).getAuditoriumShow());
+             ticket.setShowSeats(bookedSeats);
+             ticket.setAuditoriumShow(auditoriumShowService.getById(showId));
              ticket.setTicketStatus(TicketStatus.BOOKED);
              ticketRepository.save(ticket);
              return ticket;

@@ -15,7 +15,7 @@ public class Ticket extends BaseModel{
     private LocalDateTime timeOfBooking;
     private double totalAmount;
     @OneToMany
-    private List<AuditoriumShowSeat> auditoriumShowSeats;
+    private List<ShowSeat> showSeats;
     @ManyToOne
     private AuditoriumShow auditoriumShow;
     @Enumerated(EnumType.STRING)
