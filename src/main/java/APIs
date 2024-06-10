@@ -59,3 +59,19 @@ JSON Body :- {
                  "auditoriumFeatures" : ["TWO_D","THREE_D","IMAX","DOLBY_AUDIO"]
              }
 
+Post Mapping
+http://localhost:8080/createActor :- for creating actor
+
+JSON Body :- {
+                "name" : "Hritik Roshan"
+             }
+
+PostMapping
+http://localhost:8080/addMovie :- for creating Movie
+
+JSON Body :- {
+                 "name" : "Fighter",
+                 "description" : "Inspired from true events, Based on Pulwama Attack",
+                 "movieFeatures" : ["TWO_D","THREE_D","IMAX","DOLBY_AUDIO"]
+             }
+
