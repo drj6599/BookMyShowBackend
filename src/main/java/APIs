@@ -48,3 +48,14 @@ JSON Body :- {
                 "auditoriumShowSeatIds" : [13,24,37],
                 "userId" : "345"
              }
+
+Post Mapping
+http://localhost:8080/addAuditorium :- allows to add a auditorium to a theatre
+
+JSON Body :- {
+                 "theatreId" : "1",
+                 "name" : "Audi01",
+                 "capacity" : "15",
+                 "auditoriumFeatures" : ["TWO_D","THREE_D","IMAX","DOLBY_AUDIO"]
+             }
+

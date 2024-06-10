@@ -30,4 +30,12 @@ public class TheatreService {
 
         return savedTheatre;
     }
+
+    public Theatre saveTheatre(Theatre theatre){
+        return theatreRepository.save(theatre);
+    }
+
+    public Theatre getTheatreById(int id){
+        return theatreRepository.findById(id).get();
+    }
 }

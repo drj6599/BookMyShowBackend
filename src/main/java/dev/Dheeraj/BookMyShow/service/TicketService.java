@@ -1,15 +1,19 @@
 package dev.Dheeraj.BookMyShow.service;
 
+import dev.Dheeraj.BookMyShow.exception.PaymentFailedException;
 import dev.Dheeraj.BookMyShow.exception.SeatNotAvailableException;
 import dev.Dheeraj.BookMyShow.model.AuditoriumShowSeat;
 import dev.Dheeraj.BookMyShow.model.Ticket;
 import dev.Dheeraj.BookMyShow.model.constant.ShowSeatStatus;
+import dev.Dheeraj.BookMyShow.model.constant.TicketStatus;
 import dev.Dheeraj.BookMyShow.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +22,8 @@ public class TicketService {
     private TicketRepository ticketRepository;
     @Autowired
     private AuditoriumShowSeatService auditoriumShowSeatService;
+    @Autowired
+    private PaymentService paymentService;
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
      public Ticket bookTicket(List<Integer> auditoriumShowSeatIds , int userId){
@@ -33,9 +39,31 @@ public class TicketService {
              seat.setShowSeatStatus(ShowSeatStatus.LOCKED);
              auditoriumShowSeatService.saveShowSeat(seat);
          }
-         //write logic for payment flow
-         startPayment(auditoriumShowSeatIds);
-         return new Ticket();
+         boolean paymentStatus = startPayment(auditoriumShowSeatIds);
+         if(paymentStatus){
+             Ticket ticket = new Ticket();
+             ticket.setTimeOfBooking(LocalDateTime.now());
+             double amount = 0;
+             for (int i = 0; i < auditoriumShowSeatIds.size(); i++) {
+                 AuditoriumShowSeat seat = auditoriumShowSeatService.getShowSeat(auditoriumShowSeatIds.get(i));
+                 amount += seat.getPrice();
+             }
+             amount *= 1.18;          //adding 18% Gst
+             ticket.setTotalAmount(amount);
+             List<AuditoriumShowSeat> bookedSeats = new ArrayList<>();
+             for (int id : auditoriumShowSeatIds){
+                 AuditoriumShowSeat seat = auditoriumShowSeatService.getShowSeat(id);
+                 seat.setShowSeatStatus(ShowSeatStatus.BOOKED);
+                 bookedSeats.add(seat);
+                 auditoriumShowSeatService.saveShowSeat(seat);
+             }
+             ticket.setAuditoriumShowSeats(bookedSeats);
+             ticket.setAuditoriumShow(bookedSeats.get(0).getAuditoriumShow());
+             ticket.setTicketStatus(TicketStatus.BOOKED);
+             ticketRepository.save(ticket);
+             return ticket;
+         }
+         throw new PaymentFailedException("Your payment was not successful");
     }
 
     public boolean startPayment(List<Integer> auditoriumShowSeatIds){
