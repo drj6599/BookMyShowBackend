@@ -1,0 +1,50 @@
+API calls & JSON bodies :-
+Post Mapping
+http://localhost:8080/addCity :- this is to add a new city
+
+JSON :- {
+            "name" : "Delhi"
+        }
+Delete Mapping
+http://localhost:8080/deleteCity/{id} :- this api enables deleting a city by passing id for that city
+
+No JSON Body
+
+Get Mapping
+http://localhost:8080/city/{name} :- this enables you to fetch a city via it's name
+
+No JSON Body
+
+Post Mapping
+http://localhost:8080/signup :- this is to add a new User
+
+JSON Body :- {
+                 "name" : "abcd"
+                 "email" : "abcd@gmail.com",
+                 "password" : "abcd"
+             }
+
+Get Mapping
+http://localhost:8080/login :- this is to enable a user to login , if already signed up
+
+JSON Body :- {
+                 "email" : "abcd@gmail.com",
+                 "password" : "abcd"
+             }
+
+Post Mapping
+http://localhost:8080/theatre :- this is to add a new theatre
+
+JSON Body :- {
+                 "name" : "Cinepolis",
+                 "address" : "Jubliee Hills , Kolkata",
+                 "cityId" : "1"
+             }
+
+Post Mapping
+http://localhost:8080/ticket :- allows user to book tickets
+
+JSON Body :- {
+                "auditoriumShowSeatIds" : [13,24,37],
+                "userId" : "345"
+             }
