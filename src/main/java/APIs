@@ -75,3 +75,38 @@ JSON Body :- {
                  "movieFeatures" : ["TWO_D","THREE_D","IMAX","DOLBY_AUDIO"]
              }
 
+Post Mapping
+http://localhost:8080/addShowToAuditorium
+
+JSON Body :- NA
+
+Post Mapping
+http://localhost:8080/signup :- signing up of a new user
+
+JSON Body :- {
+                 "name" : "Dheeraj Talele",
+                 "email" : "dheerajtalele@gmail.com",
+                 "password" : "drj6599"
+             }
+
+GET Mapping
+http://localhost:8080/login :- logging in for existing user
+
+JSON Body :- {
+                 "email" : "dheerajtalele@gmail.com",
+                 "password" : "drj6599"
+             }
+
+Post Mapping
+http://localhost:8080/ticket :- allows to book ticket
+
+JSONBody :- {
+                "auditoriumShowSeatIds" : ["1","2","3","4","5"],
+                "userId" : "1",
+                "showId" : "1"
+            }
+
+GET Mapping
+http://localhost:8080/getPayment/1 :- to fetch payment details using id
+
+No JSON Body

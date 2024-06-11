@@ -44,4 +44,12 @@ public class UserService {
         }
         throw new InvalidPasswordException("Invalid Password");
     }
+
+    public User getById(int id){
+        return userRepository.findById(id).get();
+    }
+
+    public void saveUser(User user){
+        userRepository.save(user);
+    }
 }

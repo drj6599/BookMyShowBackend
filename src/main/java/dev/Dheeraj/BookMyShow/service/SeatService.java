@@ -28,4 +28,8 @@ public class SeatService {
         auditoriumService.update(audi);
         return null;
     }
+
+    public Seat getById(int id){
+        return seatRepository.findById(id).get();
+    }
 }
